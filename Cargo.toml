@@ -2,6 +2,9 @@
 name = "bezier_easing"
 version = "0.1.0"
 edition = "2021"
+description = "This is a rust port of Gaëtan Renaudeau's bezier-easing from https://github.com/gre/bezier-easing"
+repository = "https://github.com/hlhr202/bezier-easing-rs"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
