@@ -1,9 +1,10 @@
 /**
  * BezierEasing Rust - use bezier curve for transition easing function
- * 
+ *
  * This is a rust port of Gaëtan Renaudeau's bezier-easing from https://github.com/gre/bezier-easing
  * by 2024 Genkagaku – MIT License
  */
+
 type BFloat = f32;
 
 const NEWTON_ITERATIONS: usize = 4;
@@ -62,6 +63,7 @@ fn binary_subdivide(a_x: BFloat, a_a: BFloat, a_b: BFloat, m_x1: BFloat, m_x2: B
     current_t
 }
 
+#[inline]
 fn newton_raphson_iterate(a_x: BFloat, a_guess_t: BFloat, a_a: BFloat, a_b: BFloat) -> BFloat {
     let mut guess_t = a_guess_t;
     for _ in 0..NEWTON_ITERATIONS {
@@ -121,8 +123,20 @@ fn get_t_for_x(x: BFloat, m_x1: BFloat, m_x2: BFloat) -> BFloat {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BezierEasingError(String);
+
+impl std::fmt::Display for BezierEasingError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:#?}", self.0)
+    }
+}
+
+impl std::error::Error for BezierEasingError {
+    fn description(&self) -> &str {
+        &self.0
+    }
+}
 
 pub fn bezier_easing(
     m_x1: BFloat,
