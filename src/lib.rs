@@ -138,6 +138,15 @@ impl std::error::Error for BezierEasingError {
     }
 }
 
+/// Create a bezier easing function
+/// ## Examples
+/// ```
+/// use bezier_easing::bezier_easing;
+/// let ease = bezier_easing(0.0, 0.0, 1.0, 0.5).unwrap();
+/// assert_eq!(ease(0.0), 0.0);
+/// assert_eq!(ease(0.5), 0.3125);
+/// assert_eq!(ease(1.0), 1.0);
+/// ```
 pub fn bezier_easing(
     m_x1: BFloat,
     m_y1: BFloat,
