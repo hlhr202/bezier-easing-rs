@@ -1,6 +1,6 @@
 [package]
 name = "bezier_easing"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "This is a rust port of Gaëtan Renaudeau's bezier-easing from https://github.com/gre/bezier-easing"
 repository = "https://github.com/hlhr202/bezier-easing-rs"

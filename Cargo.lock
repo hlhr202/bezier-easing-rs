@@ -4,4 +4,4 @@ version = 3
 
 [[package]]
 name = "bezier_easing"
-version = "0.1.0"
+version = "0.1.1"
