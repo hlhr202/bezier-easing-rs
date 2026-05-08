@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0
+
+### Breaking Changes
+
+- Changed `BezierEasing` from a boxed callable function to an unboxed struct.
+- Replaced direct calls like `ease(x)` with `ease.sample(x)`.
+- Kept `bezier_easing(...)` as the free constructor, now returning the unboxed `BezierEasing` struct.
+
+### Added
+
+- Added `BezierEasing::new(...)` as an associated constructor.
+- Added Criterion benchmarks comparing the unboxed implementation against the previous boxed implementation.
+- Added bitwise regression tests to verify sampled `f32` and `f64` values match the previous boxed implementation.
+
 ## 0.2.1
 
 ### Added

@@ -18,7 +18,7 @@ By providing the coordinates of the bezier curve's control points, you can creat
 
 ```toml
 [dependencies]
-bezier_easing = "0.2"
+bezier_easing = "0.3"
 ```
 
 ## Usage
@@ -27,9 +27,9 @@ bezier_easing = "0.2"
 use bezier_easing::bezier_easing;
 
 let ease = bezier_easing(0.0_f64, 0.0, 1.0, 0.5).unwrap();
-assert_eq!(ease(0.0), 0.0);
-assert!((ease(0.5) - 0.3125).abs() < 0.000001);
-assert_eq!(ease(1.0), 1.0);
+assert_eq!(ease.sample(0.0), 0.0);
+assert!((ease.sample(0.5) - 0.3125).abs() < 0.000001);
+assert_eq!(ease.sample(1.0), 1.0);
 ```
 
 The default floating point type is `f64`. Use suffixed arguments to create an `f32` easing function:
@@ -38,7 +38,7 @@ The default floating point type is `f64`. Use suffixed arguments to create an `f
 use bezier_easing::bezier_easing;
 
 let ease = bezier_easing(0.0_f32, 0.0, 1.0, 0.5).unwrap();
-assert!((ease(0.5) - 0.3125).abs() < 0.000001);
+assert!((ease.sample(0.5) - 0.3125).abs() < 0.000001);
 ```
 
 ## WASM Example

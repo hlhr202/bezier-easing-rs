@@ -1,21 +1,21 @@
-use bezier_easing::{BezierEasing, bezier_easing};
+use bezier_easing::{BezierEasing as RustBezierEasing, bezier_easing};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub struct WasmBezierEasing {
-    easing: BezierEasing,
+pub struct BezierEasing {
+    easing: RustBezierEasing,
 }
 
 #[wasm_bindgen]
-impl WasmBezierEasing {
+impl BezierEasing {
     #[wasm_bindgen(constructor)]
-    pub fn new(x1: f64, y1: f64, x2: f64, y2: f64) -> Result<WasmBezierEasing, JsValue> {
+    pub fn new(x1: f64, y1: f64, x2: f64, y2: f64) -> Result<BezierEasing, JsValue> {
         let easing = bezier_easing(x1, y1, x2, y2).map_err(|error| error.to_string())?;
 
         Ok(Self { easing })
     }
 
     pub fn sample(&self, x: f64) -> f64 {
-        (self.easing)(x)
+        self.easing.sample(x)
     }
 }

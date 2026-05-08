@@ -264,7 +264,7 @@ fn matches_upstream_javascript_golden_values() {
         let easing = bezier_easing(x1, y1, x2, y2).unwrap();
 
         for (sample, expected) in SAMPLES.into_iter().zip(case.values) {
-            let actual = easing(sample);
+            let actual = easing.sample(sample);
             assert!(
                 (actual - expected).abs() < 1e-10,
                 "{} at x={sample}: expected {expected}, got {actual}",

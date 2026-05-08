@@ -59,20 +59,20 @@ fn bezier_easing_is_a_function() {
 fn creates_a_callable_easing_function() {
     let easing = bezier_easing(0.0_f64, 0.0, 1.0, 1.0).unwrap();
 
-    assert_eq!(easing(0.5), 0.5);
+    assert_eq!(easing.sample(0.5), 0.5);
 }
 
 #[test]
 fn evaluates_a_basic_curve() {
     let easing = bezier_easing(0.0_f64, 0.0, 1.0, 0.5).unwrap();
 
-    assert_eq!(easing(0.0), 0.0);
+    assert_eq!(easing.sample(0.0), 0.0);
     assert_close(
-        easing(0.5),
+        easing.sample(0.5),
         0.3125,
         "basic curve should match expected midpoint",
     );
-    assert_eq!(easing(1.0), 1.0);
+    assert_eq!(easing.sample(1.0), 1.0);
 }
 
 #[test]
@@ -88,10 +88,15 @@ fn linear_curves_are_linear() {
     let linear = bezier_easing(0.0_f64, 0.0, 1.0, 1.0).unwrap();
     let reversed_linear = bezier_easing(1.0_f64, 1.0, 0.0, 0.0).unwrap();
 
-    all_equals(linear, reversed_linear, 100, DEFAULT_PRECISION);
+    all_equals(
+        |x| linear.sample(x),
+        |x| reversed_linear.sample(x),
+        100,
+        DEFAULT_PRECISION,
+    );
 
     let linear = bezier_easing(0.0_f64, 0.0, 1.0, 1.0).unwrap();
-    all_equals(linear, identity, 100, DEFAULT_PRECISION);
+    all_equals(|x| linear.sample(x), identity, 100, DEFAULT_PRECISION);
 }
 
 #[test]
@@ -105,8 +110,8 @@ fn returns_the_right_value_at_extremes() {
         let d = 2.0 * random.next() - 0.5;
         let easing = bezier_easing(a, b, c, d).unwrap();
 
-        assert_eq!(easing(0.0), 0.0);
-        assert_eq!(easing(1.0), 1.0);
+        assert_eq!(easing.sample(0.0), 0.0);
+        assert_eq!(easing.sample(1.0), 1.0);
     }
 }
 
@@ -121,7 +126,7 @@ fn approaches_the_projected_value_of_its_xy_projected_curve() {
         let d = random.next();
         let easing = bezier_easing(a, b, c, d).unwrap();
         let projected = bezier_easing(b, a, d, c).unwrap();
-        let composed = |x| projected(easing(x));
+        let composed = |x| projected.sample(easing.sample(x));
 
         all_equals(identity, composed, 100, 0.05);
     }
@@ -139,7 +144,12 @@ fn two_same_instances_are_strictly_equal() {
         let easing = bezier_easing(a, b, c, d).unwrap();
         let same_easing = bezier_easing(a, b, c, d).unwrap();
 
-        all_equals(easing, same_easing, 100, DEFAULT_PRECISION);
+        all_equals(
+            |x| easing.sample(x),
+            |x| same_easing.sample(x),
+            100,
+            DEFAULT_PRECISION,
+        );
     }
 }
 
@@ -154,7 +164,7 @@ fn symmetric_curves_have_a_central_value_close_to_half() {
         let d = 1.0 - b;
         let easing = bezier_easing(a, b, c, d).unwrap();
 
-        assert_close_with_precision(easing(0.5), 0.5, "easing(0.5) should be 0.5", 0.0005);
+        assert_close_with_precision(easing.sample(0.5), 0.5, "easing(0.5) should be 0.5", 0.0005);
     }
 }
 
@@ -168,9 +178,9 @@ fn symmetric_curves_are_symmetric() {
         let c = 1.0 - a;
         let d = 1.0 - b;
         let easing = bezier_easing(a, b, c, d).unwrap();
-        let sym = |x| 1.0 - easing(1.0 - x);
+        let sym = |x| 1.0 - easing.sample(1.0 - x);
 
-        all_equals(&easing, sym, 100, DEFAULT_PRECISION);
+        all_equals(|x| easing.sample(x), sym, 100, DEFAULT_PRECISION);
     }
 }
 
@@ -178,15 +188,23 @@ fn symmetric_curves_are_symmetric() {
 fn degenerate_x_curve_matches_js_identity_x_to_t_fallback() {
     let easing = bezier_easing(0.0_f64, 0.75, 1.0 / 3.0, 0.25).unwrap();
 
-    assert_close(easing(0.25), 0.3671875, "a == 0 fallback should use t = x");
-    assert_close(easing(0.5), 0.5, "a == 0 fallback should use t = x");
-    assert_close(easing(0.75), 0.6328125, "a == 0 fallback should use t = x");
+    assert_close(
+        easing.sample(0.25),
+        0.3671875,
+        "a == 0 fallback should use t = x",
+    );
+    assert_close(easing.sample(0.5), 0.5, "a == 0 fallback should use t = x");
+    assert_close(
+        easing.sample(0.75),
+        0.6328125,
+        "a == 0 fallback should use t = x",
+    );
 }
 
 #[test]
 fn handles_low_slope_curves() {
     let easing = bezier_easing(0.0_f64, 1.0, 0.0, 1.0).unwrap();
-    let y = easing(0.000001);
+    let y = easing.sample(0.000001);
 
     assert!(y > 0.02 && y < 0.04);
 }
@@ -195,7 +213,7 @@ fn handles_low_slope_curves() {
 fn supports_f32() {
     let easing = bezier_easing(0.0_f32, 0.0, 1.0, 0.5).unwrap();
 
-    assert!((easing(0.5) - 0.3125).abs() < 0.000001);
+    assert!((easing.sample(0.5) - 0.3125).abs() < 0.000001);
 }
 
 fn assert_wrong_arguments(result: Result<bezier_easing::BezierEasing, BezierEasingError>) {

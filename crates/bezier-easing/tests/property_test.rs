@@ -38,8 +38,8 @@ proptest! {
     ) {
         let easing = bezier_easing(x1, y1, x2, y2).unwrap();
 
-        prop_assert!((easing(0.0) - 0.0).abs() <= ENDPOINT_EPSILON);
-        prop_assert!((easing(1.0) - 1.0).abs() <= ENDPOINT_EPSILON);
+        prop_assert!((easing.sample(0.0) - 0.0).abs() <= ENDPOINT_EPSILON);
+        prop_assert!((easing.sample(1.0) - 1.0).abs() <= ENDPOINT_EPSILON);
     }
 
     #[test]
@@ -52,7 +52,7 @@ proptest! {
     ) {
         let easing = bezier_easing(x1, y1, x2, y2).unwrap();
 
-        prop_assert!(easing(x).is_finite());
+        prop_assert!(easing.sample(x).is_finite());
     }
 
     #[test]
@@ -66,25 +66,25 @@ proptest! {
         let easing = bezier_easing(x1, y1, x2, y2).unwrap();
         let same_easing = bezier_easing(x1, y1, x2, y2).unwrap();
 
-        prop_assert_eq!(easing(x), same_easing(x));
+        prop_assert_eq!(easing.sample(x), same_easing.sample(x));
     }
 
     #[test]
     fn linear_curves_are_identity(a in unit(), b in unit(), x in sample_x()) {
         let easing = bezier_easing(a, a, b, b).unwrap();
 
-        prop_assert_eq!(easing(x), x);
+        prop_assert_eq!(easing.sample(x), x);
     }
 
     #[test]
     fn symmetric_curves_are_symmetric(a in unit(), b in finite_y(), x in sample_x()) {
         let easing = bezier_easing(a, b, 1.0 - a, 1.0 - b).unwrap();
-        let expected = 1.0 - easing(1.0 - x);
+        let expected = 1.0 - easing.sample(1.0 - x);
 
         prop_assert!(
-            (easing(x) - expected).abs() < SYMMETRY_EPSILON,
+            (easing.sample(x) - expected).abs() < SYMMETRY_EPSILON,
             "a={a}, b={b}, x={x}, easing(x)={}, expected={expected}",
-            easing(x)
+            easing.sample(x)
         );
     }
 
@@ -95,8 +95,8 @@ proptest! {
     ) {
         let easing_f64 = bezier_easing(x1, y1, x2, y2).unwrap();
         let easing_f32 = bezier_easing(x1 as f32, y1 as f32, x2 as f32, y2 as f32).unwrap();
-        let f64_value = easing_f64(x);
-        let f32_value = easing_f32(x as f32) as f64;
+        let f64_value = easing_f64.sample(x);
+        let f32_value = easing_f32.sample(x as f32) as f64;
 
         prop_assert!(
             (f64_value - f32_value).abs() < F32_EPSILON,

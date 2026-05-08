@@ -118,7 +118,7 @@
     </main>
 
     <script type="module">
-      import init, { WasmBezierEasing } from "./pkg/bezier_easing_wasm_demo.js";
+      import init, { BezierEasing } from "./pkg/bezier_easing_wasm_demo.js";
 
       const presets = [
         { name: "Linear", args: [0, 0, 1, 1], color: "#94a3b8" },
@@ -138,7 +138,7 @@
 
       const easings = presets.map((preset) => ({
         ...preset,
-        easing: new WasmBezierEasing(...preset.args),
+        easing: new BezierEasing(...preset.args),
       }));
 
       legend.innerHTML = easings
@@ -146,7 +146,7 @@
           ({ name, args, color }) => `
             <div class="legend-item">
               <span class="label"><span class="swatch" style="background:${color}"></span>${name}</span>
-              <code>bezier_easing(${args.join(", ")})</code>
+              <code>new BezierEasing(${args.join(", ")}).sample(x)</code>
             </div>
           `,
         )
