@@ -11,7 +11,7 @@ By providing the coordinates of the bezier curve's control points, you can creat
 ```rust
 use bezier_easing::bezier_easing;
 
-let ease = bezier_easing(0.25, 0.1, 0.25, 1.0);
+let ease = bezier_easing(0.0, 0.0, 1.0, 0.5).unwrap();
 assert_eq!(ease(0.0), 0.0);
 assert_eq!(ease(0.5), 0.3125);
 assert_eq!(ease(1.0), 1.0);
