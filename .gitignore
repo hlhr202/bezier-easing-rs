@@ -1,1 +1,3 @@
 /target
+/examples/wasm-demo/pkg
+/.playwright-mcp
