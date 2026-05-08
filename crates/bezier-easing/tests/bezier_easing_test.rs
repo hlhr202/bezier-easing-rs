@@ -63,6 +63,19 @@ fn creates_a_callable_easing_function() {
 }
 
 #[test]
+fn evaluates_a_basic_curve() {
+    let easing = bezier_easing(0.0_f64, 0.0, 1.0, 0.5).unwrap();
+
+    assert_eq!(easing(0.0), 0.0);
+    assert_close(
+        easing(0.5),
+        0.3125,
+        "basic curve should match expected midpoint",
+    );
+    assert_eq!(easing(1.0), 1.0);
+}
+
+#[test]
 fn fails_with_wrong_arguments() {
     assert_wrong_arguments(bezier_easing(0.5_f64, 0.5, -5.0, 0.5));
     assert_wrong_arguments(bezier_easing(0.5_f64, 0.5, 5.0, 0.5));
@@ -168,6 +181,14 @@ fn degenerate_x_curve_matches_js_identity_x_to_t_fallback() {
     assert_close(easing(0.25), 0.3671875, "a == 0 fallback should use t = x");
     assert_close(easing(0.5), 0.5, "a == 0 fallback should use t = x");
     assert_close(easing(0.75), 0.6328125, "a == 0 fallback should use t = x");
+}
+
+#[test]
+fn handles_low_slope_curves() {
+    let easing = bezier_easing(0.0_f64, 1.0, 0.0, 1.0).unwrap();
+    let y = easing(0.000001);
+
+    assert!(y > 0.02 && y < 0.04);
 }
 
 #[test]

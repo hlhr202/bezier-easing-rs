@@ -18,6 +18,9 @@ jobs:
         with:
           components: clippy, rustfmt
 
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
       - name: Check formatting
         run: cargo fmt --check
 
@@ -26,6 +29,9 @@ jobs:
 
       - name: Run tests
         run: cargo test -p bezier_easing --all-features
+
+      - name: Check coverage
+        run: cargo llvm-cov -p bezier_easing --all-features --fail-under-lines 90
 
       - name: Check WASM demo crate
         run: cargo check -p bezier_easing_wasm_demo

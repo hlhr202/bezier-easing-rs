@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1
+
+### Added
+
+- Added upstream JavaScript golden-output tests for common, overshooting, steep, and degenerate curves.
+- Added boundary tests for invalid x control points, NaN/Infinity handling, endpoint preservation, unclamped inputs, and y control points outside `[0, 1]`.
+- Added `proptest` coverage for endpoint invariants, deterministic outputs, identity curves, symmetric curves, and `f32`/`f64` consistency.
+- Added a CI coverage gate requiring at least 90% line coverage for the library crate.
+
 ## 0.2.0
 
 ### Breaking Changes

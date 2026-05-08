@@ -60,6 +60,7 @@ Run the release checks before publishing the library crate:
 cargo fmt --check
 cargo clippy -p bezier_easing --all-targets --all-features -- -D warnings
 cargo test -p bezier_easing --all-features
+cargo llvm-cov -p bezier_easing --all-features --fail-under-lines 90
 cargo package -p bezier_easing
 cargo publish -p bezier_easing --dry-run
 ```

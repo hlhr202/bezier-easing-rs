@@ -1,6 +1,6 @@
 [package]
 name = "bezier_easing"
-version = "0.2.0"
+version = "0.2.1"
 edition.workspace = true
 rust-version.workspace = true
 description = "Rust port of gre/bezier-easing for cubic Bezier animation curves"
@@ -12,3 +12,6 @@ keywords = ["bezier", "easing", "animation", "css"]
 categories = ["graphics", "mathematics"]
 
 [dependencies]
+
+[dev-dependencies]
+proptest = "1"

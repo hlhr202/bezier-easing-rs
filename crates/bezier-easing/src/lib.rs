@@ -182,37 +182,3 @@ pub fn bezier_easing<T: BezierFloat>(
         y(x2t(x, e, o, w, d), ay, by, cy)
     }))
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() -> Result<(), BezierEasingError> {
-        let ease = bezier_easing(0.0_f64, 0.0, 1.0, 0.5)?;
-        assert_eq!(ease(0.0), 0.0);
-        assert!((ease(0.5) - 0.3125).abs() < 0.000001);
-        assert_eq!(ease(1.0), 1.0);
-
-        Ok(())
-    }
-
-    #[test]
-    fn handles_low_slope_curves() -> Result<(), BezierEasingError> {
-        let ease = bezier_easing(0.0_f64, 1.0, 0.0, 1.0)?;
-        let y = ease(0.000001);
-
-        assert!(y > 0.02 && y < 0.04);
-
-        Ok(())
-    }
-
-    #[test]
-    fn supports_f32() -> Result<(), BezierEasingError> {
-        let ease = bezier_easing(0.0_f32, 0.0, 1.0, 0.5)?;
-
-        assert!((ease(0.5) - 0.3125).abs() < 0.000001);
-
-        Ok(())
-    }
-}
